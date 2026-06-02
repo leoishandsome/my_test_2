@@ -1,0 +1,27 @@
+name: Daily Check-in
+
+on:
+  schedule:
+    # 每天 UTC 时间 0 点运行（北京时间是上午 8 点）
+    - cron: '0 0 * * *'
+
+jobs:
+  daily_task:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Get current time
+      run: |
+        echo "Current time: $(date)"
+        echo "UTC time: $(date -u)"
+    
+    - name: Print daily message
+      run: echo "✅ Daily check-in completed at $(date)"
+    
+    - name: Show file count
+      run: |
+        echo "📁 Total files in repo:"
+        find . -type f | wc -l
