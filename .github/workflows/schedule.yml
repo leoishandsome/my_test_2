@@ -2,8 +2,8 @@ name: Daily Check-in
 
 on:
   schedule:
-    # 每天 UTC 时间 0 点运行（北京时间是上午 8 点）
     - cron: '35 17 * * *'
+  workflow_dispatch:  # ← 添加这行，允许手动触发
 
 jobs:
   daily_task:
