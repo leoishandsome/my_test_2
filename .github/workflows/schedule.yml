@@ -3,7 +3,7 @@ name: Daily Check-in
 on:
   schedule:
     # 每天 UTC 时间 0 点运行（北京时间是上午 8 点）
-    - cron: '0 0 * * *'
+    - cron: '35 17 * * *'
 
 jobs:
   daily_task:
