@@ -1,0 +1,34 @@
+name: Branch Conditions
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  check_branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Show current branch
+      run: |
+        echo "Current branch: ${{ github.ref }}"
+        echo "Branch name: ${{ github.ref_name }}"
+    
+    - name: Only on main branch
+      if: github.ref == 'refs/heads/main'
+      run: echo "This runs only on main branch"
+    
+    - name: Only on develop branch
+      if: github.ref == 'refs/heads/develop'
+      run: echo "This runs only on develop branch"
+    
+    - name: Deploy to production (main only)
+      if: github.ref == 'refs/heads/main'
+      run: echo "Deploying to production..."
+    
+    - name: Run tests (all branches)
+      run: echo "Running tests on all branches..."
