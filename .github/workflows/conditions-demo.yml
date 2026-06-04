@@ -1,0 +1,38 @@
+name: Conditions Demo
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test_conditions:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: ✅ Step 1: Always runs
+      run: echo "This step always runs"
+    
+    - name: ❌ Step 2: This will fail intentionally
+      run: |
+        echo "This step will fail"
+        exit 1
+    
+    - name: ✅ Step 3: Only runs if previous step succeeds
+      if: success()
+      run: echo "This runs only if Step 2 succeeded"
+    
+    - name: ⚠️ Step 4: Only runs if previous step failed
+      if: failure()
+      run: echo "This runs because Step 2 failed!"
+    
+    - name: 🔄 Step 5: Always runs (success or failure)
+      if: always()
+      run: echo "This runs no matter what (always)"
+    
+    - name: 📊 Step 6: Show job status
+      if: always()
+      run: |
+        echo "Job execution completed"
+        echo "If Step 2 failed, Step 4 would have run"
+        echo "If Step 2 succeeded, Step 3 would have run"
