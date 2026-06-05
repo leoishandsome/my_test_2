@@ -1,0 +1,41 @@
+name: Artifacts Demo
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Create build artifacts
+      run: |
+        mkdir -p build
+        echo "This is a build artifact" > build/app.jar
+        echo "Build completed at $(date)" > build/build-log.txt
+        echo "Test coverage: 85%" > build/coverage.txt
+    
+    - name: Create report
+      run: |
+        mkdir -p reports
+        echo "Test Report" > reports/test-report.html
+        echo "- Test 1: PASS" >> reports/test-report.html
+        echo "- Test 2: PASS" >> reports/test-report.html
+        echo "- Test 3: FAIL" >> reports/test-report.html
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: build/
+    
+    - name: Upload test report
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-report
+        path: reports/
