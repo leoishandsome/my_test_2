@@ -1,0 +1,41 @@
+name: Outputs Demo
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    # 定义这个 Job 的输出
+    outputs:
+      version: ${{ steps.generate.outputs.version }}
+      build_id: ${{ steps.generate.outputs.build_id }}
+    
+    steps:
+    - name: Generate version
+      id: generate
+      run: |
+        VERSION="1.0.0"
+        BUILD_ID=$(date +%s)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
+        echo "Generated version: $VERSION"
+        echo "Generated build ID: $BUILD_ID"
+  
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Use outputs from job1
+      run: |
+        echo "Version from job1: ${{ needs.job1.outputs.version }}"
+        echo "Build ID from job1: ${{ needs.job1.outputs.build_id }}"
+    
+    - name: Use outputs in script
+      run: |
+        VERSION="${{ needs.job1.outputs.version }}"
+        BUILD_ID="${{ needs.job1.outputs.build_id }}"
+        echo "Deploying version $VERSION (build: $BUILD_ID)"
