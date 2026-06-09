@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkflowConfig>
+    <!-- 基础信息 -->
+    <FlowName>MyAutomatedWorkflow</FlowName>
+    <Description>工作流由 GitHub Actions 自动创建</Description>
+    <Type>Standard</Type>  <!-- 工作流类型：Standard/Express -->
+    
+    <!-- 输入参数（根据阿里云 API 要求定义） -->
+    <Inputs>
+        <Input Name="Environment">prod</Input>
+        <Input Name="DeployVersion">v2.3.1</Input>
+        <Input Name="ClusterId">cn-hangzhou-cluster-001</Input>
+    </Inputs>
+
+    <!-- 执行配置 -->
+    <ExecutionMode>Parallel</ExecutionMode>  <!-- Parallel/Serial -->
+    <RetryPolicy>
+        <MaxAttempts>3</MaxAttempts>
+        <IntervalSeconds>60</IntervalSeconds>
+    </RetryPolicy>
+
+    <!-- 通知设置 -->
+    <Notifications>
+        <NotifyChannel>DingTalk</NotifyChannel>
+        <WebhookUrl>https://oapi.dingtalk.com/robot/send?access_token=xxxx</WebhookUrl>
+    </Notifications>
+</WorkflowConfig>
