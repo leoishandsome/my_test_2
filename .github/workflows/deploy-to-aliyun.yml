@@ -1,0 +1,37 @@
+name: Deploy to Aliyun Workflow
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'config/workflow.xml'
+    branches: [ main ]
+
+jobs:
+  deploy_workflow:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Display XML config
+      run: |
+        echo "Current workflow configuration:"
+        cat config/workflow.xml
+    
+    - name: Install dependencies
+      run: |
+        # 安装阿里云 CLI（如果需要）
+        pip install requests pyyaml
+    
+    - name: Parse and deploy workflow
+      env:
+        ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+        ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+        ALIYUN_REGION_ID: ${{ secrets.ALIYUN_REGION_ID }}
+      run: |
+        python ./scripts/deploy-workflow.py config/workflow.xml
+    
+    - name: Verify deployment
+      run: echo "Workflow deployed successfully to Aliyun!"
