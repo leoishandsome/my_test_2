@@ -1,0 +1,42 @@
+name: Test Environment Variables
+on:
+  workflow_dispatch:  # 允许手动触发
+  push:
+    paths:
+      - 'config/workflow.xml'  # 仅监控此文件变更
+    branches: [ main ]
+
+jobs:
+  validate_environment:  # 更名体现真实意图
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    # 新增：直接显示机密值（调试用，生产环境慎用）
+    - name: Debug - Show all env vars
+      run: |
+        echo "::group::Environment Variables"
+        env | sort
+        echo "::endgroup::"
+    
+    # 替换原来的"Display XML config"为安全校验
+    - name: Validate Aliyun credentials
+      env:
+        ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+        ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+        ALIYUN_REGION_ID: ${{ secrets.ALIYUN_REGION_ID || 'cn-hangzhou' }}  # 提供默认值
+      run: |
+        python ./scripts/test_env.py  # 使用专用校验脚本
+        if [ $? -ne 0 ]; then
+          echo "环境变量校验失败！请检查GitHub Secrets配置"
+          exit 1
+        fi
+    
+    # 可选：保留原始XML展示（需确认无敏感信息）
+    - name: Display workflow configuration (INFO)
+      run: |
+        echo "Current workflow configuration:"
+        cat config/workflow.xml
+        echo "配置文件大小: $(wc -c < config/workflow.xml) bytes"
