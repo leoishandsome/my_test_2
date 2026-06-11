@@ -40,4 +40,4 @@ jobs:
         echo "Current workflow configuration:"
         cat config/workflow.xml
         echo "配置文件大小: $(wc -c < config/workflow.xml) bytes"
-        echo"流程结束，完美测试了"
+        echo "流程结束，完美测试了"
