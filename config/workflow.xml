@@ -22,6 +22,6 @@
     <!-- 通知设置 -->
     <Notifications>
         <NotifyChannel>DingTalk</NotifyChannel>
-        <WebhookUrl>https://oapi.dingtalk.com/robot/send?access_token=xxxx</WebhookUrl>
+        <WebhookUrl>https://oapi.dingtalk.com/robot/send?access_token=1234</WebhookUrl>
     </Notifications>
 </WorkflowConfig>
